@@ -17,15 +17,16 @@ class App extends Component {
     users: [],
     loading: false,
     user: {},
+    repos: [],
     alert: null
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
 
-    const res = await axios.get(`https://api.github.com/users?client_id=$
-    {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
-    {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    const res = await axios.get(
+      `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
     this.setState({ users: res.data, loading: false });
   }
 
@@ -35,19 +36,28 @@ class App extends Component {
     }
 
     this.setState({ loading: true });
-    const res = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=$
-    {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
-    {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    const res = await axios.get(
+      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
     this.setState({ users: res.data.items, loading: false });
   };
 
   getUser = async login => {
     this.setState({ loading: true });
 
-    const res = await axios.get(`https://api.github.com/users/${login}?client_id=$
-    {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
-    {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    const res = await axios.get(
+      `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
     this.setState({ user: res.data, loading: false });
+  };
+
+  getUserRepos = async login => {
+    this.setState({ loading: true });
+
+    const res = await axios.get(
+      `https://api.github.com/users/${login}/repos?per_page=5&sort-created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ repos: res.data, loading: false });
   };
 
   clearUsers = () => this.setState({ users: [], loading: false });
@@ -61,7 +71,7 @@ class App extends Component {
   };
 
   render() {
-    const { users, loading, alert, user } = this.state;
+    const { users, loading, alert, user, repos } = this.state;
     return (
       <Fragment>
         <Navbar />
@@ -92,6 +102,8 @@ class App extends Component {
                   <User
                     {...props}
                     getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
+                    repos={repos}
                     user={user}
                     loading={loading}
                   />
