@@ -1,12 +1,15 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, lazy, Suspense } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 
 import Navbar from './components/layout/Navbar';
-import Users from './components/users/Users';
-import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
-
+import Spinner from './components/layout/Spinner';
 import './App.css';
+
+const Users = lazy(() => import('./components/users/Users'));
+const Search = lazy(() => import('./components/users/Search'));
+const About = lazy(() => import('./components/pages/About'));
 
 class App extends Component {
   state = {
@@ -53,13 +56,26 @@ class App extends Component {
         <Navbar />
         <div className='container'>
           <Alert alert={alert} />
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            setAlert={this.setAlert}
-          />
-          <Users loading={loading} users={users} />
+          <Suspense fallback={<Spinner />}>
+            <Switch>
+              <Route
+                path='/'
+                exact
+                render={props => (
+                  <Fragment>
+                    <Search
+                      searchUsers={this.searchUsers}
+                      clearUsers={this.clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={this.setAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                )}
+              />
+              <Route exact path='/about' component={About} />
+            </Switch>
+          </Suspense>
         </div>
       </Fragment>
     );
