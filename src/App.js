@@ -6,10 +6,10 @@ import Alert from './components/layout/Alert';
 import Spinner from './components/layout/Spinner';
 import './App.css';
 
-const Users = lazy(() => import('./components/users/Users'));
-const Search = lazy(() => import('./components/users/Search'));
 const About = lazy(() => import('./components/pages/About'));
 const User = lazy(() => import('./components/users/User'));
+const Home = lazy(() => import('./components/pages/Home'));
+const NotFound = lazy(() => import('./components/pages/NotFound'));
 
 const App = () => {
   return (
@@ -19,18 +19,10 @@ const App = () => {
         <Alert />
         <Suspense fallback={<Spinner />}>
           <Switch>
-            <Route
-              path='/'
-              exact
-              render={props => (
-                <Fragment>
-                  <Search />
-                  <Users />
-                </Fragment>
-              )}
-            />
+            <Route path='/' exact component={Home} />
             <Route exact path='/about' component={About} />
             <Route exact path='/user/:login' component={User} />
+            <Route component={NotFound} />
           </Switch>
         </Suspense>
       </div>
