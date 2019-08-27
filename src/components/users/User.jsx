@@ -2,13 +2,12 @@ import React, { useEffect, Fragment, lazy, Suspense, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
 import GithubContext from '../../context/github/githubContext';
-import PropTypes from 'prop-types';
 
 const Repos = lazy(() => import('../repos/Repos'));
 
-const User = ({ repos, match, getUserRepos }) => {
+const User = ({ match }) => {
   const githubContext = useContext(GithubContext);
-  const { user, loading, getUser } = githubContext;
+  const { user, loading, getUser, repos, getUserRepos } = githubContext;
 
   useEffect(() => {
     getUser(match.params.login);
@@ -102,11 +101,6 @@ const User = ({ repos, match, getUserRepos }) => {
       </Suspense>
     </Fragment>
   );
-};
-
-User.propTypes = {
-  repos: PropTypes.array.isRequired,
-  getUserRepos: PropTypes.func.isRequired
 };
 
 export default User;
