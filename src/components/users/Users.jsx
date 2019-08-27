@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import GithubContext from '../../context/github/githubContext';
 import UserItem from './UserItem';
 import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
 
-const Users = ({users, loading}) => {
+const Users = () => {
+  const githubContext = useContext(GithubContext);
+  const { loading, users } = githubContext;
 
-  if(loading) {
-    return <Spinner /> 
+  if (loading) {
+    return <Spinner />;
   } else {
     return (
       <div style={userStyle}>
@@ -14,19 +16,14 @@ const Users = ({users, loading}) => {
           <UserItem key={user.id} user={user} />
         ))}
       </div>
-    )
+    );
   }
-}
-
-Users.propTypes = {
-  users: PropTypes.array.isRequired,
-  loading: PropTypes.bool.isRequired
-}
+};
 
 const userStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
   gridGap: '1rem'
-}
+};
 
-export default Users
+export default Users;
