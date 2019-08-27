@@ -1,4 +1,4 @@
-import React, { useState, Fragment, lazy, Suspense } from 'react';
+import React, { Fragment, lazy, Suspense } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Navbar from './components/layout/Navbar';
@@ -12,21 +12,11 @@ const About = lazy(() => import('./components/pages/About'));
 const User = lazy(() => import('./components/users/User'));
 
 const App = () => {
-  const [alert, setAlert] = useState(null);
-
-  const showAlert = (msg, type) => {
-    setAlert({ msg, type });
-
-    setTimeout(() => {
-      setAlert(null);
-    }, 2000);
-  };
-
   return (
     <Fragment>
       <Navbar />
       <div className='container'>
-        <Alert alert={alert} />
+        <Alert />
         <Suspense fallback={<Spinner />}>
           <Switch>
             <Route
@@ -34,7 +24,7 @@ const App = () => {
               exact
               render={props => (
                 <Fragment>
-                  <Search setAlert={showAlert} />
+                  <Search />
                   <Users />
                 </Fragment>
               )}
